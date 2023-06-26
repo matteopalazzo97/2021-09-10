@@ -6,7 +6,11 @@ package it.polito.tdp.yelp;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import it.polito.tdp.yelp.model.Business;
+import it.polito.tdp.yelp.model.LocaleDist;
 import it.polito.tdp.yelp.model.Model;
+import it.polito.tdp.yelp.model.VerticiLatLng;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -37,13 +41,13 @@ public class FXMLController {
     private TextField txtX2; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbCitta"
-    private ComboBox<?> cmbCitta; // Value injected by FXMLLoader
+    private ComboBox<String> cmbCitta; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbB1"
-    private ComboBox<?> cmbB1; // Value injected by FXMLLoader
+    private ComboBox<VerticiLatLng> cmbB1; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbB2"
-    private ComboBox<?> cmbB2; // Value injected by FXMLLoader
+    private ComboBox<VerticiLatLng> cmbB2; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtResult"
     private TextArea txtResult; // Value injected by FXMLLoader
@@ -51,10 +55,33 @@ public class FXMLController {
     @FXML
     void doCreaGrafo(ActionEvent event) {
     	
+    	this.cmbB1.getItems().clear();
+    	
+    	if(this.cmbCitta.getValue() == null) {
+    		this.txtResult.setText("Seleziona un valore dalla tendina.");
+    	} else {
+    		this.model.creaGrafo(this.cmbCitta.getValue());
+    		
+    		this.txtResult.setText("Grafo creato.\n");
+    		this.txtResult.appendText("# vertici: " + this.model.getNumVertici() + "\n");
+    		this.txtResult.appendText("# archi:   " + this.model.getNumArchi() + "\n");
+    		
+    		this.cmbB1.getItems().addAll(this.model.getVerticiLatLng(this.cmbCitta.getValue()));
+    	}
+    	
     }
 
     @FXML
     void doCalcolaLocaleDistante(ActionEvent event) {
+    	
+    	if(this.cmbB1.getValue() == null) {
+    		this.txtResult.setText("Seleziona un valore dalla tendina.");
+    	} else {
+    		LocaleDist l = this.model.distante(this.cmbB1.getValue(), this.cmbCitta.getValue());
+    		
+    		this.txtResult.setText("Locale più distante:\n");
+    		this.txtResult.appendText(l.toString());
+    	}
 
     	
     }
@@ -80,5 +107,7 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	
+    	this.cmbCitta.getItems().addAll(this.model.getCity());
     }
 }

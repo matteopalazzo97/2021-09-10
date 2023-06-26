@@ -9,6 +9,7 @@ import java.util.List;
 import it.polito.tdp.yelp.model.Business;
 import it.polito.tdp.yelp.model.Review;
 import it.polito.tdp.yelp.model.User;
+import it.polito.tdp.yelp.model.VerticiLatLng;
 
 public class YelpDao {
 	
@@ -112,4 +113,106 @@ public class YelpDao {
 	}
 	
 	
+	
+	public List<String> getCity(){
+		String sql = "SELECT DISTINCT b.`city` "
+				   + "FROM Business b "
+				   + "ORDER BY b.`city`";
+		List<String> result = new ArrayList<String>();
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+
+				String city = res.getString("city");
+				result.add(city);
+			}
+			res.close();
+			st.close();
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<VerticiLatLng> getVertici(String city){
+		String sql = "SELECT DISTINCT b.* "
+				+ "FROM Business b "
+				+ "WHERE b.`city`=?";
+		List<VerticiLatLng> result = new ArrayList<VerticiLatLng>();
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, city);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+
+				VerticiLatLng business = new VerticiLatLng(res.getString("business_id"), 
+						res.getString("full_address"),
+						res.getString("active"),
+						res.getString("categories"),
+						res.getString("city"),
+						res.getInt("review_count"),
+						res.getString("business_name"),
+						res.getString("neighborhoods"),
+						res.getDouble("latitude"),
+						res.getDouble("longitude"),
+						res.getString("state"),
+						res.getDouble("stars"));
+				result.add(business);
+			}
+			res.close();
+			st.close();
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<VerticiLatLng> getVerticiLatLng(String city){
+		String sql = "SELECT DISTINCT b.* "
+				+ "FROM Business b "
+				+ "WHERE b.`city`=?";
+		List<VerticiLatLng> result = new ArrayList<VerticiLatLng>();
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, city);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+
+				VerticiLatLng business = new VerticiLatLng(res.getString("business_id"), 
+						res.getString("full_address"),
+						res.getString("active"),
+						res.getString("categories"),
+						res.getString("city"),
+						res.getInt("review_count"),
+						res.getString("business_name"),
+						res.getString("neighborhoods"),
+						res.getDouble("latitude"),
+						res.getDouble("longitude"),
+						res.getString("state"),
+						res.getDouble("stars"));
+				result.add(business);
+			}
+			res.close();
+			st.close();
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

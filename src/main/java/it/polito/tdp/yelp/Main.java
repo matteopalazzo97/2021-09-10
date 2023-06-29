@@ -5,3 +5,5 @@ public class Main {
         EntryPoint.main(args);
     }
 }
+//grafo non orientato e pesato
+//vertice di grado max tra gli adiacenti di un dato vertice
